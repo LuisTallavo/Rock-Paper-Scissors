@@ -1,28 +1,34 @@
 const selection = ["rock", "paper", "scissors"]
 
-let computerplay = () => {
-    return Math.floor(Math.random() * 3);
-}
 
-let playerplay = () => {
-    let move = prompt("Please enter your move").toLowerCase();
-    return move;
-}
 
-let checkmove = (move, compmove) => {
-    let result = (move == compmove) ? "Tie" : 
-             (move == "paper" && compmove == "rock") ? "Player Wins" :
-             (move == "paper" && compmove == "scissors") ? "Computer Wins" :
-             (move == "rock" && compmove == "paper") ? "Computer Wins" :
-             (move == "rock" && compmove == "scissors") ? "Player Wins" :
-             (move == "scissors" && compmove == "rock") ? "Computer Wins" :
-             (move == "scissors" && compmove == "paper") ? "Player Wins" : null;
-    return result;
-} 
+getComputerChoice = () => selection[Math.floor(Math.random() * 3)];
 
-let games = prompt("How many games would you like to play?")
 
-for (let i = 1; i <= games; i++) {
-    let move = playerplay();
-    console.log(checkmove(move, selection[computerplay()]));
-}
+function playRound(playerSelection) {
+    const computerSelection = getComputerChoice();
+    let score;
+
+    playerSelection == computerSelection ? score = 0: // draw 
+    playerSelection == selection[0] && computerSelection == selection[1] ? score = -1: // player picks rock, computer picks paper
+    playerSelection == selection[0] && computerSelection == selection[2] ? score = 1: // player picks rock, computer picks scissors
+    playerSelection == selection[1] && computerSelection == selection[0] ? score = 1: // player picks paper, computer picks rock
+    playerSelection == selection[1] && computerSelection == selection[2] ? score = -1: // player picks paper, computer picks scissors
+    playerSelection == selection[2] && computerSelection == selection[0] ? score = -1: // player picks scissors, computer picks rock
+    score = 1; // player picks scissors, computer picks paper (all other options are covered)
+
+    return score;
+  }
+
+  function game() {
+    let score = 0;
+    for (let i = 0; i < 5; i++) {
+        let scoreUpdate = playRound(prompt("Choose your weapon: Rock, Paper, or Scissors").toLowerCase());
+        score += scoreUpdate;
+        scoreUpdate > 0 ? console.log("won round") : 
+        scoreUpdate < 0 ? console.log("lost round") : console.log("Tied round")  
+    }
+    score > 0 ? console.log("Winner!") : console.log("Loser!")
+  }
+
+  game();
